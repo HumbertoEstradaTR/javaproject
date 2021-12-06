@@ -7,7 +7,7 @@ COPY pom.xml /home/app
 RUN mvn -f /home/app/pom.xml clean package
 
 # RUN ls /home/app/target
-
+# Changes for IBM Demo
 
 # Debug stage
 # FROM ubuntu:latest
