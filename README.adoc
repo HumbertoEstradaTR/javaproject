@@ -1,104 +1,54 @@
-= Jenkins Pipeline Maven build demo
+# Class model
+# imagen = models.ImageField(upload_to='imagenes/', null=True, black=True)
 
-[link=https://www.youtube.com/watch?v=HaGeSq-SB9E]
-image::https://img.youtube.com/vi/HaGeSq-SB9E/0.jpg[Sunset,300,200]
 
-== Ex 1: Using Global Tools Configuration
+# consultar una imagen:
+# <table>
+# <img src="{{ area.imagen.url }}" height="100" />
 
-[source,groovy]
-----
-#!groovy
+# mi nombre se llama Humberto
 
-pipeline {
-    agent any
 
-    tools {
-        maven "3.6.0" // You need to add a maven with name "3.6.0" in the Global Tools Configuration page
-    }
+# python -m venv myentorno
 
-    stages {
-        stage("Build") {
-            steps {
-                sh "mvn -version"
-                sh "mvn clean install"
-            }
-        }
-    }
+# ./myentorno/Scripts/activate
 
-    post {
-        always {
-            cleanWs()
-        }
-    }
-}
-----
+# python -m .\requirements.txt
 
-== Ex 2: Using `docker` agent and official Maven docker image
+# python -m .\requirements.txt
 
-[source,groovy]
-----
-#!groovy
+# python manage.py makemigrations
 
-pipeline {
-    environment {
-        JAVA_TOOL_OPTIONS = "-Duser.home=/var/maven"
-    }
-    agent {
-        docker {
-            image "maven:3.6.0-jdk-13"
-            label "docker"
-            args "-v /tmp/maven:/var/maven/.m2 -e MAVEN_CONFIG=/var/maven/.m2"
-        }
-    }
+# python manage.py migrate
 
-    stages {
-        stage("Build") {
-            steps {
-                sh "mvn -version"
-                sh "mvn clean install"
-            }
-        }
-    }
+# python manage.py runserver
 
-    post {
-        always {
-            cleanWs()
-        }
-    }
-}
-----
 
-== Ex 2: Using `dockerfile` agent and Maven docker image build from the official image
+# #Para actualizar cambios GitLab
+# cd biofrost (donde está el código xd)
+# git checkout nombrebranch
+# git status
+# git add notes
+# git commit -m "upgradenotes"
+# git push
 
-[source,groovy]
-----
-#!groovy
+# #Agregar proyecto a repositorio Github
 
-pipeline {
-    environment {
-        JAVA_TOOL_OPTIONS = "-Duser.home=/home/jenkins"
-    }
-    agent {
-        dockerfile {
-            label "docker"
-            args "-v /tmp/maven:/home/jenkins/.m2 -e MAVEN_CONFIG=/home/jenkins/.m2"
-        }
-    }
+# git init
+# git add .
+# git commit -m "first commit"
+# git remote add origin https://github.com/Singedpls/mvnrepository.git
 
-    stages {
-        stage("Build") {
-            steps {
-                sh "ssh -V"
-                sh "mvn -version"
-                sh "mvn clean install"
-            }
-        }
-    }
+# #Si no funcionó, hacer esto en CMD:
+# git init
+# git status
+# git remote show
+# git push -u origin master
 
-    post {
-        always {
-            cleanWs()
-        }
-    }
-}
-----
+# #Commit changes
+# git status
+# git add --all
+# git commit -m "name of the change"
+# git remote show
+# git push -u origin
+# git push -u origin master
