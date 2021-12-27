@@ -30,4 +30,8 @@ ENTRYPOINT [ "java", "-jar", "/usr/local/lib/maven-pipeline-demo-1.0-SNAPSHOT.ja
 
 # RUN useradd -m -u 1000 -s /bin/bash jenkins
 
+# comentarios
+
+# estos son comentarios para la práctica
+
 # RUN yum install -y openssh-clients
