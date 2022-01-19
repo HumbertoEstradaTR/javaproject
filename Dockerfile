@@ -19,7 +19,7 @@ RUN mvn -f /home/app/pom.xml clean package
 # Package stage
 FROM openjdk:11 AS test
 # RUN mkdir -p my_app
-
+# pa mi amigo el Ed
 COPY --from=build /home/app/target/maven-pipeline-demo-1.0-SNAPSHOT.jar /usr/local/lib/maven-pipeline-demo-1.0-SNAPSHOT.jar
 ENTRYPOINT [ "java", "-jar", "/usr/local/lib/maven-pipeline-demo-1.0-SNAPSHOT.jar" ]
 
