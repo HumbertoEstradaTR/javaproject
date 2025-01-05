@@ -8,6 +8,6 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hola Master DevOps! " );
+        System.out.println( "Imagine this is a complete appservice deployed in final destination" );
     }
 }
