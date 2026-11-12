@@ -7,6 +7,7 @@ on:
 
 env:
   IMAGE_TAG: v${{ github.run_number }}
+  IMAGE_NAME: ${{ secrets.REGISTRY_USER }}/myapp
 
 jobs:
 
@@ -15,33 +16,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 8
+          java-version: '8'
 
-      - name: Build
+      - name: Build and Test
         run: |
           echo "Building version $IMAGE_TAG"
-          mvn clean install
-          mvn compile
-
-      - name: Run Tests
-        run: |
-          mvn clean test
+          mvn clean verify
 
   build:
 
     needs: prebuild
+
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
 
-      - name: Login to Docker Registry
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.REGISTRY_USER }}
@@ -49,22 +50,35 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t myapp:$IMAGE_TAG .
-          docker tag myapp:$IMAGE_TAG myapp:latest
+          docker build -t $IMAGE_NAME:$IMAGE_TAG .
+          docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest
 
-      - name: Push Docker Image
+      - name: Push Docker Images
         run: |
-          docker push myapp:$IMAGE_TAG
-          docker push myapp:latest
+          docker push $IMAGE_NAME:$IMAGE_TAG
+          docker push $IMAGE_NAME:latest
 
   deploy:
 
     needs: build
+
     runs-on: ubuntu-latest
 
     steps:
 
-      - name: Deploy
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Pull Image
         run: |
-          docker pull myapp:$IMAGE_TAG
-          docker run myapp:$IMAGE_TAG
+          docker pull $IMAGE_NAME:$IMAGE_TAG
+
+      - name: Run Container
+        run: |
+          docker run -d \
+            --name myapp \
+            -p 8080:8080 \
+            $IMAGE_NAME:$IMAGE_TAG
